@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Área da Equipe | Clínica Asklepion</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-icon" aria-hidden="true">+</div>
+        <div>
+          <h1>Clínica Asklepion</h1>
+          <p>Área da recepção/equipe</p>
+        </div>
+      </div>
+      <button id="logoutBtn" class="btn topbar-btn" type="button">Sair</button>
+    </header>
+
+    <main class="page">
+      <section class="panel active">
+        <article class="card">
+          <h2>Consultas Agendadas</h2>
+          <p class="hint">Use o botão para enviar lembrete ao paciente (simulação).</p>
+          <div id="teamAppointments"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/equipe.js"></script>
+  </body>
+</html>

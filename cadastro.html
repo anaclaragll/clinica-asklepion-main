@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro | Clínica Asklepion</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-page">
+      <section class="auth-card" aria-label="Cadastro de paciente">
+        <div class="auth-brand">
+          <div class="brand-icon" aria-hidden="true">+</div>
+          <h1>Cadastro de Paciente</h1>
+          <p>Crie sua conta para agendar consultas.</p>
+        </div>
+
+        <hr class="auth-separator" />
+
+        <form id="signupForm" class="auth-form">
+          <label for="nome">Nome completo</label>
+          <input id="nome" name="nome" type="text" minlength="3" autocomplete="name" required />
+
+          <label for="cpf">CPF</label>
+          <input id="cpf" name="cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="username" required />
+
+          <label for="senha">Senha</label>
+          <input id="senha" name="senha" type="password" minlength="8" autocomplete="new-password" required />
+
+          <input type="hidden" name="tipo" value="paciente" />
+
+          <button class="btn primary full" type="submit">Cadastrar</button>
+          <p id="signupMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-footnote">
+          Já possui conta?
+          <a href="login.html">Entrar</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/cadastro.js"></script>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+(() => {
+  const STORAGE_KEYS = {
+    authUser: 'auth_user',
+    users: 'auth_users',
+    appointments: 'appointments',
+    appointmentCounter: 'appointments_counter'
+  };
+
+  // Dados mock apenas para execução local estática.
+  // Nunca use senha em texto plano em produção: use backend seguro e hash (bcrypt/argon2).
+  const seedUsers = [
+    {
+      cpf: '12345678901',
+      senha: 'paciente123',
+      nome: 'João da Silva',
+      tipo: 'paciente'
+    },
+    {
+      cpf: '22233344455',
+      senha: 'medico123',
+      nome: 'Dra. Sara Rodrigues',
+      tipo: 'medico',
+      medicoId: 'sara-rodrigues',
+      especialidade: 'Clínica Geral',
+      crm: 'CRM 123456'
+    },
+    {
+      cpf: '99988877766',
+      senha: 'recepcao123',
+      nome: 'Fernanda Souza',
+      tipo: 'recepcao'
+    }
+  ];
+
+  function normalizeCpf(cpf) {
+    return String(cpf || '').replace(/\D/g, '');
+  }
+
+  function formatCpf(cpf) {
+    const digits = normalizeCpf(cpf).slice(0, 11);
+    return digits
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  }
+
+  function encodeValue(value) {
+    // Base64 é apenas ofuscação para demo local; não é criptografia de segurança.
+    const utf8 = encodeURIComponent(JSON.stringify(value));
+    return btoa(utf8);
+  }
+
+  function decodeValue(rawValue) {
+    const utf8 = atob(rawValue);
+    return JSON.parse(decodeURIComponent(utf8));
+  }
+
+  function readStorage(key, fallback) {
+    const rawValue = localStorage.getItem(key);
+    if (!rawValue) return fallback;
+
+    try {
+      return decodeValue(rawValue);
+    } catch {
+      try {
+        return JSON.parse(rawValue);
+      } catch {
+        return fallback;
+      }
+    }
+  }
+
+  function writeStorage(key, value) {
+    localStorage.setItem(key, encodeValue(value));
+  }
+
+  function nextAppointmentCounter() {
+    const current = Number(readStorage(STORAGE_KEYS.appointmentCounter, 0)) || 0;
+    const next = current + 1;
+    writeStorage(STORAGE_KEYS.appointmentCounter, next);
+    return next;
+  }
+
+  function parseArrayStorage(key) {
+    const stored = readStorage(key, []);
+    return Array.isArray(stored) ? stored : [];
+  }
+
+  function getRegisteredUsers() {
+    return parseArrayStorage(STORAGE_KEYS.users);
+  }
+
+  function saveRegisteredUsers(users) {
+    writeStorage(STORAGE_KEYS.users, users);
+  }
+
+  function getUsers() {
+    const merged = [...seedUsers, ...getRegisteredUsers()];
+    const uniqueByCpf = new Map();
+    merged.forEach((user) => {
+      const cpf = normalizeCpf(user.cpf);
+      if (cpf.length === 11) {
+        uniqueByCpf.set(cpf, { ...user, cpf });
+      }
+    });
+    return [...uniqueByCpf.values()];
+  }
+
+  function isEquipeType(tipo) {
+    return tipo === 'medico' || tipo === 'recepcao' || tipo === 'equipe';
+  }
+
+  function matchesSelectedRole(user, selectedRole) {
+    if (selectedRole === 'paciente') {
+      return user.tipo === 'paciente';
+    }
+    return isEquipeType(user.tipo);
+  }
+
+  function authenticate(cpf, senha, selectedRole) {
+    const normalizedCpf = normalizeCpf(cpf);
+    // Comparação em texto plano é somente para mock local; em produção use hash seguro no backend.
+    const user = getUsers().find((item) => item.cpf === normalizedCpf && item.senha === senha);
+
+    if (!user) {
+      return { ok: false, message: 'CPF ou senha inválidos.' };
+    }
+
+    if (!matchesSelectedRole(user, selectedRole)) {
+      return { ok: false, message: 'Tipo de acesso não corresponde ao perfil informado.' };
+    }
+
+    return { ok: true, user };
+  }
+
+  function setSession(user) {
+    writeStorage(STORAGE_KEYS.authUser, user);
+  }
+
+  function getSession() {
+    const user = readStorage(STORAGE_KEYS.authUser, null);
+    return user && user.cpf ? user : null;
+  }
+
+  function clearSession() {
+    localStorage.removeItem(STORAGE_KEYS.authUser);
+  }
+
+  function pageForUser(user) {
+    if (user.tipo === 'paciente') return 'index.html';
+    if (user.tipo === 'medico') return 'medico.html';
+    return 'equipe.html';
+  }
+
+  function redirectToLogin() {
+    window.location.href = 'login.html';
+  }
+
+  function requireAuth(allowedTypes) {
+    const user = getSession();
+    if (!user) {
+      redirectToLogin();
+      return null;
+    }
+
+    if (Array.isArray(allowedTypes) && allowedTypes.length > 0 && !allowedTypes.includes(user.tipo)) {
+      window.location.href = pageForUser(user);
+      return null;
+    }
+
+    return user;
+  }
+
+  function redirectIfLoggedIn() {
+    const user = getSession();
+    if (user) {
+      window.location.href = pageForUser(user);
+    }
+  }
+
+  function registerPatient(payload) {
+    const nome = String(payload.nome || '').trim();
+    const cpf = normalizeCpf(payload.cpf);
+    const senha = String(payload.senha || '');
+
+    if (nome.length < 3) {
+      return { ok: false, message: 'Informe o nome completo.' };
+    }
+
+    if (cpf.length !== 11) {
+      return { ok: false, message: 'Informe um CPF válido com 11 dígitos.' };
+    }
+
+    if (senha.length < 8) {
+      return { ok: false, message: 'A senha deve ter pelo menos 8 caracteres.' };
+    }
+    if (!/[A-Za-z]/.test(senha) || !/\d/.test(senha)) {
+      return { ok: false, message: 'A senha deve conter letras e números.' };
+    }
+
+    const users = getUsers();
+    if (users.some((user) => user.cpf === cpf)) {
+      return { ok: false, message: 'Já existe cadastro para este CPF.' };
+    }
+
+    const registeredUsers = getRegisteredUsers();
+    const newUser = { nome, cpf, senha, tipo: 'paciente' };
+    registeredUsers.push(newUser);
+    saveRegisteredUsers(registeredUsers);
+
+    return { ok: true, user: newUser };
+  }
+
+  function getAppointments() {
+    return parseArrayStorage(STORAGE_KEYS.appointments);
+  }
+
+  function saveAppointments(appointments) {
+    writeStorage(STORAGE_KEYS.appointments, appointments);
+  }
+
+  function addAppointment(appointment) {
+    const appointments = getAppointments();
+    const appointmentId =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `apt-${Date.now()}-${nextAppointmentCounter()}`;
+    const item = {
+      id: appointmentId,
+      ...appointment,
+      createdAt: new Date().toISOString()
+    };
+    appointments.push(item);
+    saveAppointments(appointments);
+    return item;
+  }
+
+  function updateAppointmentReminder(id) {
+    const appointments = getAppointments();
+    const next = appointments.map((apt) =>
+      apt.id === id ? { ...apt, reminderSent: true, reminderSentAt: new Date().toISOString() } : apt
+    );
+    saveAppointments(next);
+  }
+
+  function attachCpfMask(input) {
+    input.addEventListener('input', () => {
+      input.value = formatCpf(input.value);
+    });
+  }
+
+  window.AsklepionAuth = {
+    normalizeCpf,
+    formatCpf,
+    attachCpfMask,
+    authenticate,
+    setSession,
+    getSession,
+    clearSession,
+    requireAuth,
+    redirectIfLoggedIn,
+    pageForUser,
+    registerPatient,
+    getAppointments,
+    addAppointment,
+    updateAppointmentReminder,
+    isEquipeType
+  };
+})();

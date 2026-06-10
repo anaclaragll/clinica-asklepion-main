@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Clínica Asklepion</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-page">
+      <section class="auth-card" aria-label="Acesso ao sistema">
+        <div class="auth-brand">
+          <div class="brand-icon" aria-hidden="true">+</div>
+          <h1>Clínica Asklepion</h1>
+          <p>Acesse sua área para acompanhar suas consultas.</p>
+        </div>
+
+        <hr class="auth-separator" />
+
+        <div class="segment" role="tablist" aria-label="Tipo de acesso">
+          <button id="tabPaciente" class="segment-btn active" type="button" data-role="paciente">Paciente</button>
+          <button id="tabEquipe" class="segment-btn" type="button" data-role="equipe">Equipe</button>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <label for="cpf">CPF</label>
+          <input id="cpf" name="cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="username" required />
+
+          <label for="senha">Senha</label>
+          <input id="senha" name="senha" type="password" autocomplete="current-password" required />
+
+          <button class="btn primary full" type="submit">Entrar no Sistema</button>
+          <p id="loginMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-footnote">
+          Primeira vez aqui?
+          <a href="cadastro.html">Cadastre-se</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>
