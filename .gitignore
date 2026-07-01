@@ -1,0 +1,4 @@
+node_modules/
+db/clinica.db
+.env
+*.log

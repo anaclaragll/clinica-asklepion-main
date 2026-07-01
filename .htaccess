@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /clinica-asklepion-main/
+
+# Rota todas as chamadas /api/* para o handler PHP
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api/ php_api/api.php [QSA,L]

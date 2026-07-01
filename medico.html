@@ -23,12 +23,13 @@
         <button class="tab active" data-target="consultas">Minhas Consultas</button>
         <button class="tab" data-target="perfil">Meu Perfil</button>
         <button class="tab" data-target="configuracoes">Configurações</button>
+        <button class="tab" data-target="disponibilidade">Disponibilidade</button>
       </nav>
 
       <section id="consultas" class="panel active">
         <article class="card">
           <h2>Minhas Consultas</h2>
-          <div id="doctorAppointments"></div>
+          <div id="doctorAppointments"><p class="hint">Carregando consultas...</p></div>
         </article>
       </section>
 
@@ -45,9 +46,35 @@
           <p class="hint">Painel inicial para futuras preferências da equipe médica.</p>
         </article>
       </section>
+
+      <section id="disponibilidade" class="panel">
+        <article class="card">
+          <h2>Gerenciar Disponibilidade</h2>
+          <form id="availabilityForm">
+            <label>Dia da semana
+              <select id="weekdaySelect">
+                <option value="1">Segunda (1)</option>
+                <option value="2">Terça (2)</option>
+                <option value="3">Quarta (3)</option>
+                <option value="4">Quinta (4)</option>
+                <option value="5">Sexta (5)</option>
+                <option value="6">Sábado (6)</option>
+                <option value="0">Domingo (0)</option>
+              </select>
+            </label>
+            <label>Início <input id="startTime" type="time" /></label>
+            <label>Fim <input id="endTime" type="time" /></label>
+            <label>Intervalo (min) <input id="slotMinutes" type="number" value="30" min="5" /></label>
+            <button id="addAvailabilityBtn" type="button" class="btn">Adicionar</button>
+          </form>
+
+          <h3>Entradas existentes</h3>
+          <div id="availabilityList"></div>
+        </article>
+      </section>
     </main>
 
-    <script src="js/auth.js"></script>
-    <script src="js/medico.js"></script>
+    <script src="js/auth.js?v=3"></script>
+    <script src="js/medico.js?v=3"></script>
   </body>
 </html>

@@ -1,35 +1,20 @@
 (() => {
   const STORAGE_KEYS = {
     authUser: 'auth_user',
-    users: 'auth_users',
-    appointments: 'appointments',
-    appointmentCounter: 'appointments_counter'
+    users: 'auth_users'
   };
 
-  // Dados mock apenas para execução local estática.
-  // Nunca use senha em texto plano em produção: use backend seguro e hash (bcrypt/argon2).
+  // API base:
+  // - porta 3000 (Node.js ou PHP built-in): usa paths relativos ao subdiretório
+  // - porta 80 / Apache: aponta direto para o Node.js em localhost:3000
+  const _port = window.location.port;
+  const API_BASE = (_port === '3000')
+    ? window.location.pathname.replace(/\/[^/]*$/, '')
+    : 'http://localhost:3000';
+
+  // Seed local apenas para pacientes (equipe/medicos autenticam via API/banco)
   const seedUsers = [
-    {
-      cpf: '12345678901',
-      senha: 'paciente123',
-      nome: 'João da Silva',
-      tipo: 'paciente'
-    },
-    {
-      cpf: '22233344455',
-      senha: 'medico123',
-      nome: 'Dra. Sara Rodrigues',
-      tipo: 'medico',
-      medicoId: 'sara-rodrigues',
-      especialidade: 'Clínica Geral',
-      crm: 'CRM 123456'
-    },
-    {
-      cpf: '99988877766',
-      senha: 'recepcao123',
-      nome: 'Fernanda Souza',
-      tipo: 'recepcao'
-    }
+    { cpf: '12345678901', senha: 'paciente123', nome: 'Joao da Silva', tipo: 'paciente' }
   ];
 
   function normalizeCpf(cpf) {
@@ -72,13 +57,6 @@
 
   function writeStorage(key, value) {
     localStorage.setItem(key, encodeValue(value));
-  }
-
-  function nextAppointmentCounter() {
-    const current = Number(readStorage(STORAGE_KEYS.appointmentCounter, 0)) || 0;
-    const next = current + 1;
-    writeStorage(STORAGE_KEYS.appointmentCounter, next);
-    return next;
   }
 
   function parseArrayStorage(key) {
@@ -211,38 +189,6 @@
     return { ok: true, user: newUser };
   }
 
-  function getAppointments() {
-    return parseArrayStorage(STORAGE_KEYS.appointments);
-  }
-
-  function saveAppointments(appointments) {
-    writeStorage(STORAGE_KEYS.appointments, appointments);
-  }
-
-  function addAppointment(appointment) {
-    const appointments = getAppointments();
-    const appointmentId =
-      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : `apt-${Date.now()}-${nextAppointmentCounter()}`;
-    const item = {
-      id: appointmentId,
-      ...appointment,
-      createdAt: new Date().toISOString()
-    };
-    appointments.push(item);
-    saveAppointments(appointments);
-    return item;
-  }
-
-  function updateAppointmentReminder(id) {
-    const appointments = getAppointments();
-    const next = appointments.map((apt) =>
-      apt.id === id ? { ...apt, reminderSent: true, reminderSentAt: new Date().toISOString() } : apt
-    );
-    saveAppointments(next);
-  }
-
   function attachCpfMask(input) {
     input.addEventListener('input', () => {
       input.value = formatCpf(input.value);
@@ -250,6 +196,7 @@
   }
 
   window.AsklepionAuth = {
+    apiBase: API_BASE,
     normalizeCpf,
     formatCpf,
     attachCpfMask,
@@ -261,9 +208,6 @@
     redirectIfLoggedIn,
     pageForUser,
     registerPatient,
-    getAppointments,
-    addAppointment,
-    updateAppointmentReminder,
     isEquipeType
   };
 })();

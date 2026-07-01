@@ -1,0 +1,16 @@
+{
+  "name": "clinica-asklepion-db",
+  "version": "1.0.0",
+  "description": "Scripts de inicialização do banco para Clinica Asklepion",
+  "main": "db/init_db.js",
+  "scripts": {
+    "init-db": "node db/init_db.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "express": "^4.18.4",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  }
+}

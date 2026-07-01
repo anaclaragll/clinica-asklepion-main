@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Área da Equipe | Clínica Asklepion</title>
+    <title>Painel Admin | Clínica Asklepion</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
@@ -12,23 +12,131 @@
         <div class="brand-icon" aria-hidden="true">+</div>
         <div>
           <h1>Clínica Asklepion</h1>
-          <p>Área da recepção/equipe</p>
+          <p id="adminSubtitle">Painel Administrativo</p>
         </div>
       </div>
       <button id="logoutBtn" class="btn topbar-btn" type="button">Sair</button>
     </header>
 
     <main class="page">
-      <section class="panel active">
+      <nav class="tabs" aria-label="Navegação">
+        <button class="tab active" data-target="consultas">Consultas</button>
+        <button class="tab" data-target="medicos" id="tabMedicos">Médicos</button>
+      </nav>
+
+      <!-- ABA: Consultas -->
+      <section id="consultas" class="panel active">
         <article class="card">
           <h2>Consultas Agendadas</h2>
-          <p class="hint">Use o botão para enviar lembrete ao paciente (simulação).</p>
-          <div id="teamAppointments"></div>
+          <div id="teamAppointments"><p class="hint">Carregando...</p></div>
+        </article>
+      </section>
+
+      <!-- ABA: Médicos (admin only) -->
+      <section id="medicos" class="panel">
+        <article class="card">
+          <h2>Médicos Cadastrados</h2>
+          <div id="doctorListAdmin"><p class="hint">Carregando...</p></div>
+        </article>
+
+        <article class="card" id="cardAddDoctor">
+          <h2>Cadastrar Novo Médico</h2>
+          <form id="addDoctorForm">
+            <div class="form-cols">
+              <div class="form-row">
+                <label>Nome completo</label>
+                <input id="adName" placeholder="Dr. João Pereira" required />
+              </div>
+              <div class="form-row">
+                <label>E-mail</label>
+                <input id="adEmail" type="email" placeholder="joao@asklepion.com" required />
+              </div>
+            </div>
+            <div class="form-cols">
+              <div class="form-row">
+                <label>CPF</label>
+                <input id="adCpf" placeholder="000.000.000-00" />
+              </div>
+              <div class="form-row">
+                <label>Especialidade</label>
+                <input id="adSpecialty" placeholder="Ex: Cardiologia" />
+              </div>
+            </div>
+            <div class="form-cols">
+              <div class="form-row">
+                <label>CRM</label>
+                <input id="adCrm" placeholder="Ex: CRM-20001" />
+              </div>
+              <div class="form-row">
+                <label>Bio <span class="form-hint">Opcional</span></label>
+                <input id="adBio" placeholder="Breve descrição do médico" />
+              </div>
+            </div>
+
+            <hr class="form-divider" />
+            <p class="form-section-label">Horários de Atendimento</p>
+            <div id="scheduleSlots"></div>
+            <div class="form-row">
+              <button id="addSlotBtn" type="button" class="btn btn-outline btn-sm">+ Adicionar Horário</button>
+            </div>
+
+            <hr class="form-divider" />
+            <div class="form-cols">
+              <div class="form-row">
+                <label>Senha de acesso</label>
+                <input id="adSenha" type="password" required />
+              </div>
+              <div class="form-row">
+                <label>Confirmar senha</label>
+                <input id="adConfirmar" type="password" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <button id="addDoctorBtn" type="button" class="btn primary full">Cadastrar Médico</button>
+            </div>
+          </form>
+          <p id="addDoctorResult" class="form-message"></p>
         </article>
       </section>
     </main>
 
-    <script src="js/auth.js"></script>
-    <script src="js/equipe.js"></script>
+    <!-- Modal: Editar Médico -->
+    <div id="editDoctorModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+      <div class="modal-box">
+        <h3 id="editModalTitle">Editar Médico</h3>
+        <div class="form-cols">
+          <div class="form-row">
+            <label>Nome completo</label>
+            <input id="emName" type="text" />
+          </div>
+          <div class="form-row">
+            <label>E-mail</label>
+            <input id="emEmail" type="email" />
+          </div>
+        </div>
+        <div class="form-cols">
+          <div class="form-row">
+            <label>Especialidade</label>
+            <input id="emSpecialty" type="text" />
+          </div>
+          <div class="form-row">
+            <label>CRM</label>
+            <input id="emCrm" type="text" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Bio</label>
+          <input id="emBio" type="text" />
+        </div>
+        <p id="editDoctorResult" class="form-message"></p>
+        <div class="modal-footer">
+          <button id="editDoctorCancelBtn" type="button" class="btn btn-outline">Fechar</button>
+          <button id="editDoctorSaveBtn" type="button" class="btn primary">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/auth.js?v=3"></script>
+    <script src="js/equipe.js?v=3"></script>
   </body>
 </html>

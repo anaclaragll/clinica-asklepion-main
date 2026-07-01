@@ -326,11 +326,254 @@ input {
 
 .appointment-item {
   border: 1px solid var(--line);
+  border-left: 4px solid var(--blue-700);
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.appointment-item--cancelled {
+  border-left-color: #ef4444;
+  background: #fff5f5;
+}
+.appointment-item--cancelled .hint { color: #b91c1c; }
+.appointment-item--completed {
+  border-left-color: #22c55e;
+  background: #f0fdf4;
 }
 
 .hidden {
   display: none;
 }
+
+/* ---- Form layout ---- */
+.form-row {
+  margin-bottom: 14px;
+}
+.form-row label {
+  margin-bottom: 6px;
+}
+.form-row input,
+.form-row textarea,
+.form-row select {
+  margin-bottom: 0;
+}
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  resize: vertical;
+}
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ---- Admin doctor list ---- */
+.doctor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background: #fafbfd;
+}
+.doctor-row-info {
+  flex: 1;
+  line-height: 1.5;
+}
+.btn-success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+  white-space: nowrap;
+}
+.btn-success:hover { background: #6ee7b7; }
+
+.btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  white-space: nowrap;
+}
+.btn-danger:hover {
+  background: #fca5a5;
+}
+
+/* ── Form 2 colunas ──────────────────────────── */
+.form-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+@media (max-width: 580px) {
+  .form-cols { grid-template-columns: 1fr; }
+}
+.form-divider {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 18px 0 14px;
+}
+.form-section-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--blue-900);
+  margin: 0 0 10px;
+}
+.form-hint {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-left: 4px;
+}
+
+/* ── Slot de horário ─────────────────────────── */
+.slot-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #f5f8ff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.slot-row select,
+.slot-row input[type="time"] {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 0.875rem;
+  width: auto;
+  margin-bottom: 0;
+  background: #fff;
+}
+.slot-sep {
+  color: var(--muted);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* ── Botões extras ───────────────────────────── */
+.btn-outline {
+  background: transparent;
+  color: var(--blue-900);
+  border: 1.5px solid var(--blue-900);
+}
+.btn-outline:hover { background: #edf3fb; }
+.btn-sm { padding: 6px 10px; font-size: 0.82rem; border-radius: 8px; }
+
+/* ── Badges de status ────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-scheduled { background: #dbeafe; color: #1d4ed8; }
+.badge-completed  { background: #d1fae5; color: #065f46; }
+.badge-cancelled  { background: #fee2e2; color: #b91c1c; }
+
+/* ── Card de consulta (painel admin) ─────────── */
+.appt-card {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue-700);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  transition: background 0.2s;
+}
+.appt-card--cancelled {
+  border-left-color: #ef4444;
+  background: #fff5f5;
+}
+.appt-card--cancelled .appt-names,
+.appt-card--cancelled .appt-meta { color: #7f1d1d; }
+.appt-card--completed {
+  border-left-color: #22c55e;
+  background: #f0fdf4;
+}
+.appt-names { font-weight: 700; }
+.appt-meta  { color: var(--muted); font-size: 0.875rem; }
+
+/* ── Lista de médicos melhorada ──────────────── */
+.doctor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--blue-900);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.specialty-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: var(--blue-700);
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* ── Botões de ação em linha ─────────────────── */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ── Modal de edição ─────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 28px 22px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modal-box h3 { margin: 0 0 2px; font-size: 1.1rem; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+.btn-warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+.btn-warning:hover { background: #fcd34d; }

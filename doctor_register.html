@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cadastro de Médico | Clínica Asklepion</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-icon" aria-hidden="true">+</div>
+        <div>
+          <h1>Clínica Asklepion</h1>
+          <p>Cadastro de Médico</p>
+        </div>
+      </div>
+      <a href="login.html" class="btn topbar-btn">Voltar ao login</a>
+    </header>
+
+    <main class="page">
+      <article class="card">
+        <h2>Cadastrar Novo Médico</h2>
+        <form id="doctorForm">
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Nome completo</label>
+              <input id="name" placeholder="Dr. João Pereira" required />
+            </div>
+            <div class="form-row">
+              <label>E-mail</label>
+              <input id="email" type="email" placeholder="joao@asklepion.com" required />
+            </div>
+          </div>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>CPF</label>
+              <input id="cpf" placeholder="000.000.000-00" />
+            </div>
+            <div class="form-row">
+              <label>Especialidade</label>
+              <input id="specialty" placeholder="Ex: Cardiologia" />
+            </div>
+          </div>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>CRM</label>
+              <input id="crm" placeholder="Ex: CRM-20001" />
+            </div>
+            <div class="form-row">
+              <label>Bio <span class="form-hint">Opcional</span></label>
+              <input id="bio" placeholder="Breve descrição do médico" />
+            </div>
+          </div>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Senha de acesso</label>
+              <input id="senha" type="password" required />
+            </div>
+            <div class="form-row">
+              <label>Confirmar senha</label>
+              <input id="confirmar" type="password" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <button id="submitBtn" type="button" class="btn primary full">Cadastrar Médico</button>
+          </div>
+        </form>
+        <p id="result" class="form-message"></p>
+      </article>
+    </main>
+
+    <script src="js/auth.js?v=2"></script>
+    <script src="js/doctor_register.js?v=2"></script>
+  </body>
+</html>

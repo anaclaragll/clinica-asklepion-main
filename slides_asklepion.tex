@@ -1,0 +1,453 @@
+\documentclass[xcolor={table}]{beamer}
+
+% --- TEMA E CORES (AZUL CLÍNICA) ---
+\usetheme{Madrid}
+\definecolor{ClinicBlue}{RGB}{13,71,161}
+\setbeamercolor{structure}{fg=ClinicBlue}
+\setbeamercolor{palette primary}{bg=ClinicBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=ClinicBlue!80!black,fg=white}
+\setbeamercolor{palette tertiary}{bg=ClinicBlue!60!black,fg=white}
+\setbeamercolor{title in head/foot}{bg=ClinicBlue,fg=white}
+
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+
+\title{Clínica Asklepion}
+\subtitle{Sistema Web de Gestão de Consultas Médicas}
+\author{Caio Mendes}
+\institute{Clínica Asklepion}
+\date{2026}
+
+\begin{document}
+
+% ============================================================
+% SLIDE 1: CAPA
+% ============================================================
+\begin{frame}[plain]
+    \centering
+    \vspace{0.8cm}
+    {\color{ClinicBlue}\Huge\textbf{+}}\\
+    \vspace{0.4cm}
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+        \usebeamerfont{title}\inserttitle\par
+        \vspace{2pt}
+        \usebeamerfont{subtitle}\insertsubtitle\par
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+        \insertauthor\ $\cdot$\ \insertdate
+    \end{beamercolorbox}
+\end{frame}
+
+% ============================================================
+% SLIDE 2: SUMÁRIO
+% ============================================================
+\begin{frame}{Sumário}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{enumerate}
+                \item Objetivos
+                \item Problemas
+                \item Tecnologias Utilizadas
+                \item Requisitos do Sistema
+                \item Arquitetura do Sistema
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{enumerate}
+                \setcounter{enumi}{5}
+                \item Controle de Acesso
+                \item Modelo Entidade-Relacionamento
+                \item Regras de Negócio
+                \item Resultados Obtidos
+                \item Conclusão
+            \end{enumerate}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 3: OBJETIVOS
+% ============================================================
+\begin{frame}{Objetivos}
+    \begin{block}{Objetivo Geral}
+        \justifying
+        Desenvolver um sistema web completo para gerenciamento de consultas médicas,
+        integrando pacientes, médicos e equipe administrativa em uma plataforma única e
+        acessível.
+    \end{block}
+    \vspace{0.3cm}
+    \textbf{Objetivos Específicos:}
+    \begin{itemize}
+        \item[\color{ClinicBlue}$\checkmark$] Automatizar o agendamento de consultas por parte dos pacientes
+        \item[\color{ClinicBlue}$\checkmark$] Prover painel dedicado para cada perfil de usuário
+        \item[\color{ClinicBlue}$\checkmark$] Gerenciar disponibilidade de horários dos médicos dinamicamente
+        \item[\color{ClinicBlue}$\checkmark$] Permitir cancelamento e remarcação de consultas
+        \item[\color{ClinicBlue}$\checkmark$] Centralizar o controle administrativo de médicos e consultas
+    \end{itemize}
+\end{frame}
+
+% ============================================================
+% SLIDE 4: PROBLEMAS
+% ============================================================
+\begin{frame}{Problemas Identificados}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{alertblock}{Processo Manual}
+                Agendamentos feitos por telefone ou presencialmente, sujeitos a erros e conflitos de horários.
+            \end{alertblock}
+            \vspace{0.2cm}
+            \begin{alertblock}{Falta de Visibilidade}
+                Pacientes não tinham acesso aos horários disponíveis de cada médico em tempo real.
+            \end{alertblock}
+            \vspace{0.2cm}
+            \begin{alertblock}{Controle Descentralizado}
+                Equipe administrativa sem ferramenta unificada para acompanhar e gerir consultas.
+            \end{alertblock}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{exampleblock}{Solução Proposta}
+                \justifying
+                \small
+                Um sistema web com \textbf{3 painéis distintos} (paciente, médico, equipe) e uma
+                \textbf{API REST} centralizada que elimina redundâncias e conflitos,
+                garantindo consistência dos dados em tempo real.
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 5: TECNOLOGIAS
+% ============================================================
+\begin{frame}{Tecnologias Utilizadas}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Frontend}
+            \begin{itemize}
+                \item \textbf{HTML5} — Estrutura das páginas
+                \item \textbf{CSS3} — Estilização responsiva
+                \item \textbf{JavaScript} (Vanilla) — Lógica e interatividade
+                \item \texttt{localStorage} — Sessão do paciente
+            \end{itemize}
+            \vspace{0.3cm}
+            \textbf{Infraestrutura}
+            \begin{itemize}
+                \item \textbf{Apache/XAMPP} — Servidor de arquivos estáticos
+                \item \textbf{Node.js} — Execução do servidor
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Backend}
+            \begin{itemize}
+                \item \textbf{Node.js} — Ambiente de execução
+                \item \textbf{Express.js} — Framework HTTP/REST
+                \item \textbf{SQLite3} — Banco de dados relacional
+                \item \textbf{CORS + body-parser} — Middlewares
+            \end{itemize}
+            \vspace{0.3cm}
+            \begin{block}{Endpoints da API}
+                \small
+                $\approx$\textbf{15 endpoints REST} cobrindo autenticação,
+                médicos, consultas e disponibilidade.
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 6: REQUISITOS FUNCIONAIS
+% ============================================================
+\begin{frame}{Requisitos Funcionais}
+    \small
+    \begin{table}
+        \rowcolors{1}{white}{ClinicBlue!10}
+        \begin{tabular}{>{\bfseries}p{1.1cm} p{8.2cm}}
+            \toprule
+            \textbf{Código} & \textbf{Descrição} \\
+            \midrule
+            RF01 & Autenticação por CPF e senha (paciente via local; equipe via API) \\
+            RF02 & Cadastro de pacientes com validação de CPF e senha \\
+            RF03 & Agendamento de consultas com seleção de médico, dia e horário \\
+            RF04 & Cancelamento e remarcação de consultas pelo paciente \\
+            RF05 & Painel médico: visualizar, concluir e cancelar consultas \\
+            RF06 & Gerenciamento de disponibilidade de horários pelo médico \\
+            RF07 & Painel admin: cadastrar, editar e remover médicos \\
+            RF08 & Painel admin/equipe: concluir e cancelar qualquer consulta \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+% ============================================================
+% SLIDE 7: REQUISITOS NÃO FUNCIONAIS
+% ============================================================
+\begin{frame}{Requisitos Não Funcionais}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Desempenho}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Slots calculados dinamicamente para os próximos 14 dias
+                    \item[\color{ClinicBlue}$\checkmark$] Respostas da API em tempo real sem recarregamento de página
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Usabilidade}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Interface responsiva (mobile e desktop)
+                    \item[\color{ClinicBlue}$\checkmark$] Navegação por abas sem redirecionamento de página
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Segurança}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Autenticação obrigatória para todas as áreas internas
+                    \item[\color{ClinicBlue}$\checkmark$] Isolamento de dados: cada perfil acessa apenas o que lhe pertence
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Manutenibilidade}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Banco inicializado via \texttt{schema.sql}
+                    \item[\color{ClinicBlue}$\checkmark$] Scripts de inicialização automatizados (\texttt{.bat})
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 8: ARQUITETURA
+% ============================================================
+\begin{frame}{Arquitetura do Sistema}
+    \justifying
+    O sistema segue a arquitetura \textbf{Cliente-Servidor em 3 camadas}:
+    \vspace{0.3cm}
+
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={draw, rounded corners, fill=ClinicBlue!15, minimum width=3.2cm,
+                    minimum height=0.8cm, font=\small\bfseries, text centered},
+        arr/.style={->, thick, color=ClinicBlue}
+    ]
+        \node[box] (front) at (0,0)    {Camada de\\Apresentação};
+        \node[box] (api)   at (4.5,0)  {Camada de\\Negócio (API)};
+        \node[box] (db)    at (9,0)    {Camada de\\Dados (SQLite)};
+
+        \draw[arr] (front.east) -- node[above]{\tiny HTTP/REST} (api.west);
+        \draw[arr] (api.east)   -- node[above]{\tiny SQL}       (db.west);
+        \draw[arr] (api.west)   -- node[below]{\tiny JSON}      (front.east);
+        \draw[arr] (db.west)    -- node[below]{\tiny Resultados}(api.east);
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.2cm}
+    \begin{columns}
+        \begin{column}{0.33\textwidth}
+            \centering\small
+            \textbf{HTML/CSS/JS}\\
+            Páginas SPA-like,\\3 painéis distintos
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \centering\small
+            \textbf{Node.js/Express}\\
+            API REST\\porta 3000
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \centering\small
+            \textbf{SQLite3}\\
+            4 tabelas,\\arquivo local
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 9: CONTROLE DE ACESSO
+% ============================================================
+\begin{frame}{Controle de Acesso}
+    \small
+    \begin{table}
+        \rowcolors{1}{white}{ClinicBlue!10}
+        \begin{tabular}{>{\bfseries}p{2cm} p{3cm} p{4.5cm}}
+            \toprule
+            \textbf{Perfil} & \textbf{Autenticação} & \textbf{Permissões} \\
+            \midrule
+            Paciente   & CPF + senha\newline(localStorage)  & Agendar, ver, cancelar e remarcar suas consultas \\
+            Médico     & CPF + senha\newline(API/banco)      & Ver suas consultas, concluir, cancelar, gerenciar disponibilidade \\
+            Admin      & CPF + senha\newline(API/banco)      & Tudo do Admin: cadastrar/editar/remover médicos, gerir todas as consultas \\
+            Recepção   & CPF + senha\newline(API/banco)      & Visualizar e gerir consultas (sem acesso à aba de médicos) \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+    \vspace{0.2cm}
+    \begin{exampleblock}{Isolamento garantido}
+        \small
+        A função \texttt{requireAuth(roles)} em \texttt{auth.js} verifica o perfil na sessão e redireciona automaticamente caso o acesso não seja permitido.
+    \end{exampleblock}
+\end{frame}
+
+% ============================================================
+% SLIDE 10: MER
+% ============================================================
+\begin{frame}{Modelo Entidade-Relacionamento}
+    \small
+    \begin{center}
+    \begin{tikzpicture}[
+        entity/.style={draw, rectangle, rounded corners, fill=ClinicBlue!20,
+                       minimum width=2.8cm, minimum height=0.7cm,
+                       font=\small\bfseries, text centered},
+        rel/.style={draw, diamond, fill=ClinicBlue!40, minimum width=1.8cm,
+                    minimum height=0.6cm, font=\tiny, text centered},
+        line/.style={thick}
+    ]
+        \node[entity] (users)  at (0, 2)    {users};
+        \node[entity] (medicos) at (4, 2)   {medicos};
+        \node[entity] (appts)  at (4, 0)    {appointments};
+        \node[entity] (avail)  at (8, 2)    {doctor\_availability};
+
+        \draw[line] (users.east)  -- node[above]{\tiny 1} node[below]{\tiny 1} (medicos.west);
+        \draw[line] (users.south) -- ++(0,-1.2) -| node[near start, above]{\tiny 1} node[near end, left]{\tiny N} (appts.west);
+        \draw[line] (medicos.south) -- node[right]{\tiny 1} node[left]{\tiny N} (appts.north);
+        \draw[line] (medicos.east) -- node[above]{\tiny 1} node[below]{\tiny N} (avail.west);
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.1cm}
+    \begin{columns}
+        \scriptsize
+        \begin{column}{0.25\textwidth}
+            \textbf{users}\\id, name, email,\\cpf, password\_hash,\\role, phone
+        \end{column}
+        \begin{column}{0.25\textwidth}
+            \textbf{medicos}\\id, user\_id,\\specialty, crm, bio
+        \end{column}
+        \begin{column}{0.25\textwidth}
+            \textbf{appointments}\\id, patient\_id,\\doctor\_id,\\scheduled\_at, status
+        \end{column}
+        \begin{column}{0.25\textwidth}
+            \textbf{availability}\\id, doctor\_id,\\weekday,\\start/end\_time
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 11: REGRAS DE NEGÓCIO
+% ============================================================
+\begin{frame}{Regras de Negócio}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Agendamento}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Um slot só aceita \textbf{uma consulta} por médico/horário
+                    \item[\color{ClinicBlue}$\checkmark$] Slots são gerados dinamicamente com base na disponibilidade cadastrada
+                    \item[\color{ClinicBlue}$\checkmark$] Apenas dias com horário disponível são exibidos ao paciente
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Ciclo de Vida da Consulta}
+                \begin{center}
+                \small
+                \texttt{scheduled} $\rightarrow$ \texttt{completed}\\
+                \texttt{scheduled} $\rightarrow$ \texttt{cancelled}
+                \end{center}
+                \begin{itemize}
+                    \item[\color{ClinicBlue}$\checkmark$] Só consultas \texttt{scheduled} podem ser canceladas ou remarcadas
+                    \item[\color{ClinicBlue}$\checkmark$] Remarcação = cancela atual + novo agendamento
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.2cm}
+    \begin{alertblock}{Integridade Referencial}
+        \small
+        Exclusão em cascata: remover um médico apaga automaticamente suas consultas e disponibilidades via \texttt{FOREIGN KEY ... ON DELETE CASCADE}.
+    \end{alertblock}
+\end{frame}
+
+% ============================================================
+% SLIDE 12: RESULTADOS OBTIDOS
+% ============================================================
+\begin{frame}{Resultados Obtidos}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Funcionalidades entregues:}
+            \begin{itemize}
+                \item[\color{ClinicBlue}$\checkmark$] \textbf{4 perfis} de acesso distintos e isolados
+                \item[\color{ClinicBlue}$\checkmark$] \textbf{6 médicos} pré-cadastrados com disponibilidade semanal
+                \item[\color{ClinicBlue}$\checkmark$] Agendamento em \textbf{4 etapas} guiadas (médico $\to$ dia $\to$ hora $\to$ confirmar)
+                \item[\color{ClinicBlue}$\checkmark$] Cancelamento e remarcação pelo paciente
+                \item[\color{ClinicBlue}$\checkmark$] CRUD completo de médicos (admin)
+                \item[\color{ClinicBlue}$\checkmark$] \textbf{15+ endpoints} REST documentados
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{exampleblock}{Indicadores}
+                \small
+                \begin{itemize}
+                    \item \textbf{4} tabelas no banco de dados
+                    \item \textbf{7} arquivos HTML (páginas)
+                    \item \textbf{6} módulos JavaScript
+                    \item \textbf{1} API REST Express.js
+                    \item Slots calculados para \textbf{14 dias} à frente
+                    \item Interface \textbf{responsiva} sem frameworks externos
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 13: CONCLUSÃO
+% ============================================================
+\begin{frame}{Conclusão}
+    \justifying
+    O sistema \textbf{Clínica Asklepion} demonstrou que é possível construir uma aplicação web funcional, segura e organizada utilizando tecnologias acessíveis como \textit{Node.js}, \textit{Express} e \textit{SQLite}, sem dependência de frameworks de frontend pesados.
+
+    \vspace{0.4cm}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Pontos fortes:}
+            \begin{itemize}
+                \item Arquitetura clara em 3 camadas
+                \item Controle de acesso por perfil
+                \item Slots dinâmicos e sem conflito
+                \item Fácil implantação local (XAMPP)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Próximos passos:}
+            \begin{itemize}
+                \item Criptografia de senhas (bcrypt)
+                \item Notificações por e-mail/SMS
+                \item Deploy em nuvem (VPS/Heroku)
+                \item Prontuário eletrônico do paciente
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+% SLIDE 14: AGRADECIMENTOS
+% ============================================================
+\begin{frame}[plain]
+    \centering
+    \vspace{1.2cm}
+    {\huge \color{ClinicBlue} \textbf{Obrigado!}}\\
+    \vspace{0.8cm}
+    \large Agradecemos a atenção de todos.\\
+    \vspace{1cm}
+    {\color{ClinicBlue}\Huge\textbf{+}}\\
+    \vspace{0.4cm}
+    \footnotesize \textbf{Clínica Asklepion} $\cdot$ Sistema Web de Gestão de Consultas $\cdot$ 2026
+\end{frame}
+
+\end{document}

@@ -20,9 +20,12 @@ Front-end estático em **HTML, CSS e JavaScript puro**, com autenticação mock,
 ## Como executar
 
 1. Clone ou baixe o repositório.
-2. Abra o arquivo `login.html` diretamente no navegador.
+2. Coloque a pasta do projeto em `C:\xampp\htdocs\clinica-asklepion-main` (já está neste local no seu ambiente).
 
-Não há backend nem dependências externas.
+O projeto suporta duas formas de execução:
+
+- PHP + XAMPP (recomendado para Windows)
+- Node.js (opcional, apenas se você quiser rodar o servidor Node)
 
 ## Usuários mock para teste
 
@@ -42,3 +45,62 @@ Não há backend nem dependências externas.
   - recepção/equipe → `equipe.html`
 - **Agendamento**: no dashboard do paciente, consultas confirmadas são salvas em `localStorage` (`appointments`) vinculadas ao CPF do paciente.
 - **Minhas Consultas**: lista apenas consultas do paciente logado.
+
+## Banco de dados
+
+Adicionei um esquema SQLite e um script de inicialização para facilitar testes locais com persistência simples.
+
+- Arquivos adicionados:
+  - `db/schema.sql` — esquema e dados de exemplo.
+  - `db/init_db.js` — script Node.js que cria `db/clinica.db` a partir do schema.
+  - `package.json` — script `npm run init-db` para inicializar o banco.
+
+Instruções rápidas (PHP/XAMPP):
+
+Abra o XAMPP Control Panel e inicie `Apache` e `MySQL`. Então execute:
+
+PowerShell (ou CMD):
+```powershell
+cd C:\xampp\htdocs\clinica-asklepion-main
+C:\xampp\php\php.exe php_api\init_db.php
+```
+
+Ou simplesmente clique duas vezes em `open_site.bat` (criado para Windows) — ele inicializa o DB usando o PHP do XAMPP e abre o site.
+
+O banco SQLite será criado em `db/clinica.db`.
+
+## Executando localmente (API + front-end)
+
+Node.js (opcional):
+
+Se quiser usar o fluxo Node (requer Node.js e npm instalados):
+
+```powershell
+cd C:\xampp\htdocs\clinica-asklepion-main
+npm install
+npm run init-db
+npm start
+```
+
+O servidor Node expõe a aplicação normalmente em `http://localhost:3000`.
+
+### Usando PHP (sem Node)
+
+Se preferir rodar a API em PHP (não precisa do Node), certifique-se de ter:
+
+- PHP 8+ instalado
+- Extensão PDO_SQLITE habilitada
+
+Com PHP instalado, inicie o servidor built-in na raiz do projeto:
+
+Windows CMD:
+```bat
+start_php.bat
+```
+
+PowerShell:
+```powershell
+.\start_php.ps1
+```
+
+Isso inicializa um servidor em `http://localhost:3000` que serve o front-end e os endpoints em `/api/*` implementados em `php_api/api.php`. O banco usado é `db/clinica.db`.
